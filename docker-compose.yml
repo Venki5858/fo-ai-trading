@@ -1,4 +1,6 @@
-﻿services:
+﻿version: "3.9"
+
+services:
   postgres:
     image: postgres:15
     environment:
@@ -18,13 +20,15 @@
       - postgres
     volumes:
       - ./data:/app/data
-      
+
   ai-signals:
     build: ./services/ai-signals
     ports:
-      - "5002:5000"
+      - "5004:5000"
     depends_on:
       - postgres
+    volumes:
+      - ./models:/app/models
 
   order-engine:
     build: ./services/order-engine
@@ -39,6 +43,9 @@
       - market-data
       - ai-signals
       - order-engine
+      - paper-broker
+    environment:
+      - EXECUTION_MODE=paper
 
   dashboard:
     build: ./services/dashboard
@@ -46,6 +53,13 @@
       - "3000:3000"
     depends_on:
       - api-gateway
+
+  paper-broker:
+    build: ./services/paper-broker
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./data/paper-broker:/data
 
 volumes:
   postgres_data:
