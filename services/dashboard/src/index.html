@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>F&O AI Trading Dashboard</title>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; color: white; margin-bottom: 40px; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; color: white; }
+        .price { font-size: 2.5em; font-weight: bold; }
+        .signal { font-size: 1.5em; padding: 10px 20px; border-radius: 50px; display: inline-block; margin: 10px 0; }
+        .buy { background: #10b981; } .sell { background: #ef4444; }
+        button { background: #f59e0b; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.1em; cursor: pointer; }
+        .orders { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 F&O AI Trading Platform</h1>
+            <p>Live NIFTY Signals + Auto Trading</p>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <h2>NIFTY 50</h2>
+                <div class="price" id="price">--</div>
+                <div id="signal" class="signal">--</div>
+                <div id="confidence">--</div>
+            </div>
+            <div class="card">
+                <h2>Recent Orders</h2>
+                <div id="orders" class="orders">No orders yet</div>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <button onclick="placeOrder()">🚀 Execute AI Signal</button>
+        </div>
+    </div>
+    <script>
+        async function fetchData() {
+            try {
+                const res = await fetch('http://localhost:8000/nifty');
+                const data = await res.json();
+                document.getElementById('price').textContent = `₹${data.price}`;
+                document.getElementById('signal').textContent = data.prediction;
+                document.getElementById('signal').className = `signal ${data.prediction.toLowerCase()}`;
+                document.getElementById('confidence').textContent = `Confidence: ${data.confidence * 100}%`;
+            } catch(e) { console.log('API not ready'); }
+        }
+        async function placeOrder() {
+            const data = await (await fetch('http://localhost:8000/nifty')).json();
+            await fetch('http://localhost:8000/execute', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({symbol: 'NIFTY', side: data.prediction, quantity: 50, price: data.price})
+            });
+            fetchData();
+        }
+        fetchData(); setInterval(fetchData, 3000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+﻿services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: trading
+      POSTGRES_USER: trader
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  market-data:
+    build: ./services/market-data
+    ports:
+      - "5001:5000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./data:/app/data
+      
+  ai-signals:
+    build: ./services/ai-signals
+    ports:
+      - "5002:5000"
+    depends_on:
+      - postgres
+
+  order-engine:
+    build: ./services/order-engine
+    ports:
+      - "5003:5000"
+
+  api-gateway:
+    build: ./services/api-gateway
+    ports:
+      - "8000:5000"
+    depends_on:
+      - market-data
+      - ai-signals
+      - order-engine
+
+  dashboard:
+    build: ./services/dashboard
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+
+volumes:
+  postgres_data:

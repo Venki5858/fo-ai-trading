@@ -1,0 +1,10 @@
+﻿{
+  "name": "fo-ai-trading-dashboard",
+  "version": "1.0.0",
+  "description": "F&O AI Trading Dashboard",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -s src -l 3000"
+  },
+  "dependencies": {}
+}
