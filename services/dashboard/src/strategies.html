@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AlgoTrading.AI – Strategies</title>
+    <style>
+      body { font-family: Arial, sans-serif; background:#050816; color:#e5e7eb; margin:0; }
+
+      /* Global top navigation (same layout as index.html) */
+      .top-nav {
+        display:flex;
+        align-items:center;
+        padding:12px 32px;
+        background:#020617;
+        border-bottom:1px solid #1f2937;
+      }
+      .top-left-nav { flex:0 0 auto; }
+      .app-name-nav {
+        font-weight:bold;
+        font-size:20px;
+        color:#e5e7eb;
+      }
+      .top-menu {
+        flex:1 1 auto;
+        display:flex;
+        justify-content:center;
+      }
+      .top-menu .nav-link {
+        margin:0 12px;
+        color:#9ca3af;
+        text-decoration:none;
+        font-size:14px;
+      }
+      .top-menu .nav-link.active {
+        color:#38bdf8;
+        border-bottom:2px solid #38bdf8;
+        padding-bottom:4px;
+      }
+      .top-right-nav { flex:0 0 auto; }
+      .top-right-nav .kite-link {
+        color:#38bdf8;
+        text-decoration:none;
+        font-size:16px;
+        font-weight:500;
+      }
+      .top-right-nav .kite-link:hover { text-decoration:underline; }
+
+      .row { display:flex; flex-wrap:wrap; padding:16px 32px; gap:16px; }
+
+      .card {
+        background:linear-gradient(145deg,#020617,#020617);
+        padding:16px 20px;
+        margin:0;
+        border-radius:12px;
+        flex:1 1 320px;
+        box-shadow:0 18px 30px rgba(0,0,0,0.6);
+        border:1px solid #111827;
+      }
+      .card.wide { flex:2 1 420px; }
+
+      h1 { margin:0 0 4px 0; font-size:22px; }
+      h2 { margin:0 0 8px 0; font-size:18px; }
+      p  { margin:4px 0; font-size:14px; color:#d1d5db; }
+
+      .pill {
+        display:inline-block;
+        padding:2px 10px;
+        border-radius:999px;
+        font-size:12px;
+        text-transform:uppercase;
+        border:1px solid #1f2937;
+        background:#020617;
+      }
+      .pill-running  { color:#22c55e; border-color:#16a34a; }
+      .pill-paused   { color:#eab308; border-color:#eab308; }
+      .pill-disabled { color:#6b7280; border-color:#374151; }
+
+      .mini-metric { font-size:13px; color:#9ca3af; }
+      .mini-metric span { color:#e5e7eb; font-weight:500; }
+
+      .tag {
+        display:inline-block;
+        padding:2px 8px;
+        margin-right:4px;
+        border-radius:999px;
+        background:#111827;
+        font-size:11px;
+        color:#9ca3af;
+      }
+
+      .btn-row { margin-top:10px; }
+      .btn {
+        padding:8px 14px;
+        border-radius:999px;
+        border:none;
+        cursor:pointer;
+        font-size:13px;
+        font-weight:500;
+        margin-right:8px;
+      }
+      .btn-primary { background:#38bdf8; color:#020617; }
+      .btn-secondary { background:#111827; color:#e5e7eb; border:1px solid #1f2937; }
+    </style>
+  </head>
+  <body>
+    <!-- Global navigation bar (Strategies active) -->
+    <div class="top-nav">
+      <div class="top-left-nav">
+        <span class="app-name-nav">AlgoTrading.AI</span>
+      </div>
+      <div class="top-menu">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="strategies.html" class="nav-link active">Strategies</a>
+        <a href="trades.html" class="nav-link">Trades &amp; Journal</a>
+        <a href="analytics.html" class="nav-link">Analytics</a>
+        <a href="settings.html" class="nav-link">Settings</a>
+      </div>
+      <div class="top-right-nav">
+        <a href="https://kite.zerodha.com/" target="_blank" class="kite-link">
+          Open in Zerodha
+        </a>
+      </div>
+    </div>
+
+    <!-- Strategies cards -->
+    <div class="row">
+      <div class="card">
+        <h2>NIFTY SMA</h2>
+        <p><span class="pill pill-running">Running</span></p>
+        <p class="mini-metric">Last signal: <span id="nifty-last-signal">FLAT</span></p>
+        <p class="mini-metric">Timeframe: <span>5m candles</span></p>
+        <p class="mini-metric">Parameters: <span>Fast 10 / Slow 20</span></p>
+        <p class="mini-metric">Today P&amp;L: <span>+0.00</span></p>
+        <p class="mini-metric">Total P&amp;L: <span>+0.00</span></p>
+        <p>
+          <span class="tag">SMA crossover</span>
+          <span class="tag">NIFTY futures</span>
+        </p>
+        <div class="btn-row">
+          <button class="btn btn-primary">Edit</button>
+          <button class="btn btn-secondary">Pause</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>BANKNIFTY SMA</h2>
+        <p><span class="pill pill-paused">Paused</span></p>
+        <p class="mini-metric">Last signal: <span>UNKNOWN</span></p>
+        <p class="mini-metric">Timeframe: <span>5m candles</span></p>
+        <p class="mini-metric">Parameters: <span>Fast 10 / Slow 20</span></p>
+        <p class="mini-metric">Today P&amp;L: <span>0.00</span></p>
+        <p class="mini-metric">Total P&amp;L: <span>0.00</span></p>
+        <p>
+          <span class="tag">SMA crossover</span>
+          <span class="tag">BANKNIFTY futures</span>
+        </p>
+        <div class="btn-row">
+          <button class="btn btn-primary">Edit</button>
+          <button class="btn btn-secondary">Resume</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Future ML Bot</h2>
+        <p><span class="pill pill-disabled">Planned</span></p>
+        <p class="mini-metric">Universe: <span>NIFTY 50 stocks</span></p>
+        <p class="mini-metric">Model: <span>To be added</span></p>
+        <p class="mini-metric">Status: <span>Design phase</span></p>
+        <p>
+          <span class="tag">Machine learning</span>
+          <span class="tag">Mean reversion</span>
+        </p>
+        <div class="btn-row">
+          <button class="btn btn-primary">Design</button>
+          <button class="btn btn-secondary">Duplicate</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

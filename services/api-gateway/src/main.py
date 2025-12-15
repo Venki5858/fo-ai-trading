@@ -18,6 +18,8 @@ MARKET_DATA_URL = os.getenv("MARKET_DATA_URL", "http://market-data:5000")
 AI_SIGNALS_URL = os.getenv("AI_SIGNALS_URL", "http://ai-signals:5000")
 PAPER_BROKER_URL = os.getenv("PAPER_BROKER_URL", "http://paper-broker:5000")
 EXECUTION_MODE = os.getenv("EXECUTION_MODE", "paper")
+LIVE_BROKER_URL = os.getenv("LIVE_BROKER_URL", "http://live-broker:5000")
+
 
 @app.get("/health")
 def health():
@@ -111,3 +113,10 @@ async def journal_stats():
         resp = await client.get(f"{PAPER_BROKER_URL}/stats")
         stats = resp.json()
     return stats
+
+@app.get("/broker/margins")
+async def broker_margins():
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(f"{LIVE_BROKER_URL}/margins")
+        return resp.json()
+

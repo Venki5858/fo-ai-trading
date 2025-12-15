@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AlgoTrading.AI – Trades & Journal</title>
+    <style>
+      body { font-family: Arial, sans-serif; background:#050816; color:#e5e7eb; margin:0; }
+
+      /* global top navigation (same layout as index.html) */
+      .top-nav {
+        display:flex;
+        align-items:center;
+        padding:12px 32px;
+        background:#020617;
+        border-bottom:1px solid #1f2937;
+      }
+      .top-left-nav { flex:0 0 auto; }
+      .app-name-nav {
+        font-weight:bold;
+        font-size:20px;
+        color:#e5e7eb;
+      }
+      .top-menu {
+        flex:1 1 auto;
+        display:flex;
+        justify-content:center;
+      }
+      .top-menu .nav-link {
+        margin:0 12px;
+        color:#9ca3af;
+        text-decoration:none;
+        font-size:14px;
+      }
+      .top-menu .nav-link.active {
+        color:#38bdf8;
+        border-bottom:2px solid #38bdf8;
+        padding-bottom:4px;
+      }
+      .top-right-nav { flex:0 0 auto; }
+      .top-right-nav .kite-link {
+        color:#38bdf8;
+        text-decoration:none;
+        font-size:16px;
+        font-weight:500;
+      }
+      .top-right-nav .kite-link:hover { text-decoration:underline; }
+
+      .row { display:flex; flex-wrap:wrap; padding:16px 32px; gap:16px; }
+
+      .card {
+        background:linear-gradient(145deg,#020617,#020617);
+        padding:16px 20px;
+        margin:0;
+        border-radius:12px;
+        flex:1 1 320px;
+        box-shadow:0 18px 30px rgba(0,0,0,0.6);
+        border:1px solid #111827;
+      }
+      .card.wide { flex:2 1 420px; }
+
+      h2 { margin:0 0 12px 0; font-size:18px; }
+
+      table { width:100%; border-collapse:collapse; font-size:14px; }
+      thead tr { color:#9ca3af; border-bottom:1px solid #1f2937; }
+      th, td { padding:6px 4px; }
+      th { text-align:left; font-weight:500; }
+      td.num { text-align:right; }
+      tbody tr { border-bottom:1px solid #020617; }
+      tbody tr:nth-child(even) { background:#020617; }
+
+      .note-text { font-size:13px; color:#9ca3af; line-height:1.5; }
+    </style>
+  </head>
+  <body>
+    <!-- Global navigation bar (Trades active) -->
+    <div class="top-nav">
+      <div class="top-left-nav">
+        <span class="app-name-nav">AlgoTrading.AI</span>
+      </div>
+      <div class="top-menu">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="strategies.html" class="nav-link">Strategies</a>
+        <a href="trades.html" class="nav-link active">Trades &amp; Journal</a>
+        <a href="analytics.html" class="nav-link">Analytics</a>
+        <a href="settings.html" class="nav-link">Settings</a>
+      </div>
+      <div class="top-right-nav">
+        <a href="https://kite.zerodha.com/" target="_blank" class="kite-link">
+          Open in Zerodha
+        </a>
+      </div>
+    </div>
+
+    <!-- Trades & Journal content -->
+    <div class="row">
+      <div class="card wide">
+        <h2>Trades &amp; Journal</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Symbol</th>
+              <th>Side</th>
+              <th class="num">Qty</th>
+              <th class="num">Price</th>
+              <th class="num">P&amp;L</th>
+              <th>Tag</th>
+            </tr>
+          </thead>
+          <tbody id="trades-body">
+            <!-- rows will be filled by JS -->
+            <tr>
+              <td>–</td>
+              <td>–</td>
+              <td>–</td>
+              <td class="num">–</td>
+              <td class="num">–</td>
+              <td class="num">–</td>
+              <td>–</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Journal Notes</h2>
+        <p class="note-text">
+          Use this page to review closed trades, write brief notes on why you entered,
+          how you managed risk, and what you will improve in the next session.
+        </p>
+        <p class="note-text">
+          Later you can connect this card to a backend endpoint (for example
+          <code>/journal</code>) to load and save notes per trading day.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      async function loadTrades() {
+        try {
+          const res = await fetch('http://localhost:5002/orders');
+          const trades = await res.json();
+
+          const tbody = document.getElementById('trades-body');
+          tbody.innerHTML = '';
+
+          if (!Array.isArray(trades) || trades.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td colspan="7" style="padding:8px 4px; color:#6b7280;">
+                No trades yet for today.
+              </td>`;
+            tbody.appendChild(tr);
+            return;
+          }
+
+          for (const t of trades) {
+            const tr = document.createElement('tr');
+            const price = t.price != null ? Number(t.price) : null;
+            const pnl = t.pnl != null ? Number(t.pnl) : null;
+            tr.innerHTML = `
+              <td>${t.timestamp || '-'}</td>
+              <td>${t.symbol || '-'}</td>
+              <td>${t.side || '-'}</td>
+              <td class="num">${t.quantity ?? '-'}</td>
+              <td class="num">${price != null && !isNaN(price) ? price.toFixed(2) : '-'}</td>
+              <td class="num">${pnl != null && !isNaN(pnl) ? pnl.toFixed(2) : '-'}</td>
+              <td>${t.tag || '-'}</td>
+            `;
+            tbody.appendChild(tr);
+          }
+        } catch (e) {
+          console.log('loadTrades error', e);
+        }
+      }
+
+      loadTrades();
+      setInterval(loadTrades, 5000);
+    </script>
+  </body>
+</html>

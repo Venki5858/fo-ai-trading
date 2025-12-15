@@ -40,3 +40,6 @@ On every push to main:
 - Replace CSV with live NSE data API.
 - Add real ML model (LSTM) for F&O signals.
 - Deploy to AWS EKS using Terraform and GitOps (ArgoCD).
+
+## 7. Name
+- Narendra Guvvala

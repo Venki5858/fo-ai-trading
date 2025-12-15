@@ -4,7 +4,7 @@
   "description": "F&O AI Trading Dashboard",
   "main": "index.html",
   "scripts": {
-    "start": "serve -s src -l 3000"
+    "start": "serve src -l 3000"
   },
   "dependencies": {}
 }

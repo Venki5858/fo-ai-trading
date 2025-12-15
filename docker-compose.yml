@@ -29,6 +29,8 @@ services:
       - postgres
     volumes:
       - ./models:/app/models
+      - ./strategies:/app/strategies
+      - ./data/live:/data/live
 
   order-engine:
     build: ./services/order-engine
@@ -59,7 +61,16 @@ services:
     ports:
       - "5002:5000"
     volumes:
-      - ./data/paper-broker:/data
+      - ./data/journal:/data
+
+  live-broker:
+    build: ./services/live-broker
+    ports:
+      - "5005:5000"
+    environment:
+      - Z_KITE_API_KEY=mtb3ovyzkoxwuovq
+      - Z_KITE_API_SECRET=uf698sbvsadg1znnukqdr5z47mkpcaaq
+      - Z_KITE_ACCESS_TOKEN=tVXABUHlNQT0D8YIzlQTC3Xu3wQQfQ9L
 
 volumes:
   postgres_data:

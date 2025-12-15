@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AlgoTrading.AI – Analytics</title>
+    <style>
+      body { font-family: Arial, sans-serif; background:#050816; color:#e5e7eb; margin:0; }
+
+      /* global top navigation (same layout as index.html) */
+      .top-nav {
+        display:flex;
+        align-items:center;
+        padding:12px 32px;
+        background:#020617;
+        border-bottom:1px solid #1f2937;
+      }
+      .top-left-nav { flex:0 0 auto; }
+      .app-name-nav {
+        font-weight:bold;
+        font-size:20px;
+        color:#e5e7eb;
+      }
+      .top-menu {
+        flex:1 1 auto;
+        display:flex;
+        justify-content:center;
+      }
+      .top-menu .nav-link {
+        margin:0 12px;
+        color:#9ca3af;
+        text-decoration:none;
+        font-size:14px;
+      }
+      .top-menu .nav-link.active {
+        color:#38bdf8;
+        border-bottom:2px solid #38bdf8;
+        padding-bottom:4px;
+      }
+      .top-right-nav { flex:0 0 auto; }
+      .top-right-nav .kite-link {
+        color:#38bdf8;
+        text-decoration:none;
+        font-size:16px;
+        font-weight:500;
+      }
+      .top-right-nav .kite-link:hover { text-decoration:underline; }
+
+      .row { display:flex; flex-wrap:wrap; padding:16px 32px; gap:16px; }
+
+      .card {
+        background:linear-gradient(145deg,#020617,#020617);
+        padding:16px 20px;
+        margin:0;
+        border-radius:12px;
+        flex:1 1 320px;
+        box-shadow:0 18px 30px rgba(0,0,0,0.6);
+        border:1px solid #111827;
+      }
+      .card.wide { flex:2 1 420px; }
+
+      h2 { margin:0 0 12px 0; font-size:18px; }
+
+      .chart-placeholder {
+        height:220px;
+        border-radius:10px;
+        background:radial-gradient(circle at top left,#1f2937,#020617);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#6b7280;
+        font-size:13px;
+      }
+
+      .metric-row {
+        display:flex;
+        justify-content:space-between;
+        margin-bottom:8px;
+        font-size:14px;
+      }
+      .metric-label { color:#9ca3af; }
+      .metric-value { font-weight:500; }
+      .metric-pos { color:#22c55e; }
+      .metric-neg { color:#ef4444; }
+    </style>
+  </head>
+  <body>
+    <!-- Global navigation bar (Analytics active) -->
+    <div class="top-nav">
+      <div class="top-left-nav">
+        <span class="app-name-nav">AlgoTrading.AI</span>
+      </div>
+      <div class="top-menu">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="strategies.html" class="nav-link">Strategies</a>
+        <a href="trades.html" class="nav-link">Trades &amp; Journal</a>
+        <a href="analytics.html" class="nav-link active">Analytics</a>
+        <a href="settings.html" class="nav-link">Settings</a>
+      </div>
+      <div class="top-right-nav">
+        <a href="https://kite.zerodha.com/" target="_blank" class="kite-link">
+          Open in Zerodha
+        </a>
+      </div>
+    </div>
+
+    <!-- Analytics content -->
+    <div class="row">
+      <div class="card wide">
+        <h2>Equity Curve</h2>
+        <div class="chart-placeholder">
+          Equity curve / balance over time (connect later to /analytics/equity endpoint)
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Monthly P&amp;L &amp; Win Rate</h2>
+        <div class="metric-row">
+          <span class="metric-label">Last 30 days P&amp;L</span>
+          <span class="metric-value metric-pos">+0.00</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Win rate</span>
+          <span class="metric-value">0%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Max drawdown</span>
+          <span class="metric-value metric-neg">0.00</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Avg trade R-multiple</span>
+          <span class="metric-value">0.00</span>
+        </div>
+        <p style="font-size:13px; color:#9ca3af; margin-top:12px;">
+          Later you can render real charts here using a JS chart library or values from an
+          <code>/analytics</code> API.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

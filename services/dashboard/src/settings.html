@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AlgoTrading.AI – Settings</title>
+    <style>
+      body { font-family: Arial, sans-serif; background:#050816; color:#e5e7eb; margin:0; }
+
+      /* global top navigation */
+      .top-nav {
+        display:flex;
+        align-items:center;
+        padding:12px 32px;
+        background:#020617;
+        border-bottom:1px solid #1f2937;
+      }
+      .top-left-nav { flex:0 0 auto; }
+      .app-name-nav {
+        font-weight:bold;
+        font-size:20px;
+        color:#e5e7eb;
+      }
+      .top-menu {
+        flex:1 1 auto;
+        display:flex;
+        justify-content:center;
+      }
+      .top-menu .nav-link {
+        margin:0 12px;
+        color:#9ca3af;
+        text-decoration:none;
+        font-size:14px;
+      }
+      .top-menu .nav-link.active {
+        color:#38bdf8;
+        border-bottom:2px solid #38bdf8;
+        padding-bottom:4px;
+      }
+      .top-right-nav { flex:0 0 auto; }
+      .top-right-nav .kite-link {
+        color:#38bdf8;
+        text-decoration:none;
+        font-size:16px;
+        font-weight:500;
+      }
+      .top-right-nav .kite-link:hover { text-decoration:underline; }
+
+      .row { display:flex; flex-wrap:wrap; padding:16px 32px; gap:16px; }
+
+      .card {
+        background:linear-gradient(145deg,#020617,#020617);
+        padding:16px 20px;
+        margin:0;
+        border-radius:12px;
+        flex:1 1 320px;
+        box-shadow:0 18px 30px rgba(0,0,0,0.6);
+        border:1px solid #111827;
+      }
+      h2 { margin:0 0 12px 0; font-size:18px; }
+
+      label { display:block; font-size:13px; margin-bottom:6px; color:#9ca3af; }
+      input, select {
+        width:100%;
+        padding:8px 10px;
+        border-radius:8px;
+        border:1px solid #1f2937;
+        background:#020617;
+        color:#e5e7eb;
+        font-size:13px;
+        box-sizing:border-box;
+      }
+      .btn {
+        margin-top:10px;
+        padding:8px 14px;
+        border-radius:999px;
+        border:none;
+        cursor:pointer;
+        font-size:13px;
+        font-weight:500;
+      }
+      .btn-primary { background:#38bdf8; color:#020617; }
+      .btn-secondary { background:#111827; color:#e5e7eb; border:1px solid #1f2937; }
+      .hint { font-size:12px; color:#6b7280; margin-top:4px; }
+    </style>
+  </head>
+  <body>
+    <!-- Global navigation bar (Settings active) -->
+    <div class="top-nav">
+      <div class="top-left-nav">
+        <span class="app-name-nav">AlgoTrading.AI</span>
+      </div>
+      <div class="top-menu">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="strategies.html" class="nav-link">Strategies</a>
+        <a href="trades.html" class="nav-link">Trades &amp; Journal</a>
+        <a href="analytics.html" class="nav-link">Analytics</a>
+        <a href="settings.html" class="nav-link active">Settings</a>
+      </div>
+      <div class="top-right-nav">
+        <a href="https://kite.zerodha.com/" target="_blank" class="kite-link">
+          Open in Zerodha
+        </a>
+      </div>
+    </div>
+
+    <!-- Settings content -->
+    <div class="row">
+      <div class="card">
+        <h2>Broker API Keys</h2>
+        <label for="api-key">API key</label>
+        <input id="api-key" type="text" placeholder="Enter broker API key" />
+        <label for="api-secret" style="margin-top:10px;">API secret</label>
+        <input id="api-secret" type="password" placeholder="Enter API secret" />
+        <p class="hint">In real app, these would be stored securely in backend, not in the browser.</p>
+        <button class="btn btn-primary">Save API Settings</button>
+      </div>
+
+      <div class="card">
+        <h2>Risk Limits</h2>
+        <label for="daily-loss">Daily max loss (₹)</label>
+        <input id="daily-loss" type="number" placeholder="e.g. 5000" />
+        <label for="max-position" style="margin-top:10px;">Max open positions</label>
+        <input id="max-position" type="number" placeholder="e.g. 5" />
+        <p class="hint">Use these to cap risk per day and avoid overtrading.</p>
+        <button class="btn btn-primary">Save Risk Limits</button>
+      </div>
+
+      <div class="card">
+        <h2>Theme Selection</h2>
+        <label for="theme-select">Theme</label>
+        <select id="theme-select">
+          <option value="dark" selected>Dark (current)</option>
+          <option value="light">Light (future)</option>
+        </select>
+        <p class="hint">Right now only the dark theme is implemented; others can be added later.</p>
+        <button class="btn btn-secondary">Apply Theme</button>
+      </div>
+    </div>
+  </body>
+</html>

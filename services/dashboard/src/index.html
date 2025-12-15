@@ -2,56 +2,226 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>NIFTY & BANKNIFTY Paper Trading</title>
+    <title>AlgoTrading.AI</title>
     <style>
-      body { font-family: Arial, sans-serif; background:#050816; color:#e5e7eb; }
-      .row { display:flex; flex-wrap:wrap; }
-      .card { background:#111827; padding:16px; margin:16px; border-radius:8px; flex:1 1 300px; }
+      body { font-family: Arial, sans-serif; background:#050816; color:#e5e7eb; margin:0; }
+
+      /* global top navigation */
+      .top-nav {
+        display:flex;
+        align-items:center;
+        padding:12px 32px;
+        background:#020617;
+        border-bottom:1px solid #1f2937;
+      }
+      .top-left-nav { flex:0 0 auto; }
+      .app-name-nav {
+        font-weight:bold;
+        font-size:20px;
+        color:#e5e7eb;
+      }
+      .top-menu {
+        flex:1 1 auto;
+        display:flex;
+        justify-content:center;
+      }
+      .top-menu .nav-link {
+        margin:0 12px;
+        color:#9ca3af;
+        text-decoration:none;
+        font-size:14px;
+      }
+      .top-menu .nav-link.active {
+        color:#38bdf8;
+        border-bottom:2px solid #38bdf8;
+        padding-bottom:4px;
+      }
+      .top-right-nav { flex:0 0 auto; }
+      .top-right-nav .kite-link {
+        color:#38bdf8;
+        text-decoration:none;
+        font-size:16px;
+        font-weight:500;
+      }
+      .top-right-nav .kite-link:hover { text-decoration:underline; }
+
+      .row { display:flex; flex-wrap:wrap; padding:16px 32px; gap:16px; }
+
+      .card {
+        background:linear-gradient(145deg,#020617,#020617);
+        padding:16px 20px;
+        margin:0;
+        border-radius:12px;
+        flex:1 1 320px;
+        box-shadow:0 18px 30px rgba(0,0,0,0.6);
+        border:1px solid #111827;
+      }
+      .card.wide { flex:2 1 420px; }
+
+      h2, h3 { margin:0 0 12px 0; font-size:18px; }
+
+      .overview-list { margin-top:8px; border-top:1px solid #1f2937; }
+      .overview-row {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:10px 0;
+        border-bottom:1px solid #1f2937;
+        font-size:15px;
+      }
+      .overview-label { color:#9ca3af; }
+      .overview-value { font-weight:500; }
+
+      .actions-body {
+        margin-top:8px;
+        border-top:1px solid #1f2937;
+        font-size:15px;
+      }
+      .actions-row {
+        padding:10px 0;
+        border-bottom:1px solid #1f2937;
+      }
+
+      pre { background:#020617; padding:8px; border-radius:8px; max-height:200px; overflow:auto; }
+
+      button {
+        padding:14px 28px;
+        margin-right:12px;
+        border-radius:999px;
+        border:none;
+        cursor:pointer;
+        font-size:16px;
+        font-weight:bold;
+      }
+      .buy-btn { background:#16a34a; color:#020617; }
+      .sell-btn { background:#ef4444; color:#020617; }
+
       .signal.buy { color:#22c55e; }
       .signal.sell { color:#ef4444; }
-      pre { background:#020617; padding:8px; border-radius:4px; max-height:200px; overflow:auto; }
-      button { padding:8px 16px; margin-right:8px; border-radius:4px; border:none; cursor:pointer; }
-      .buy-btn { background:#22c55e; color:#020617; }
-      .sell-btn { background:#ef4444; color:#020617; }
       .pnl-positive { color:#22c55e; }
       .pnl-negative { color:#ef4444; }
+
+      /* trading status strip under nav */
+      .top-bar {
+        display:flex;
+        align-items:center;
+        padding:14px 32px;
+        background:#020617;
+        border-bottom:1px solid #1f2937;
+        box-shadow:0 10px 25px rgba(0,0,0,0.7);
+        gap:10px;
+      }
+      .symbol { font-weight:bold; color:#a5b4fc; font-size:16px; }
+      .price { font-weight:bold; font-size:22px; }
+      .change { font-size:16px; }
+      .change.positive { color:#22c55e; }
+      .change.negative { color:#ef4444; }
+      .signal-badge {
+        padding:4px 14px;
+        border-radius:999px;
+        font-size:14px;
+        text-transform:uppercase;
+        background:#374151;
+      }
+      .signal-badge.buy { background:#022c22; color:#22c55e; }
+      .signal-badge.sell { background:#3b0a0a; color:#ef4444; }
+      .signal-badge.flat { background:#374151; color:#e5e7eb; }
     </style>
   </head>
   <body>
+    <!-- Global navigation bar: logo + centered menu + Zerodha -->
+    <div class="top-nav">
+      <div class="top-left-nav">
+        <span class="app-name-nav">AlgoTrading.AI</span>
+      </div>
+      <div class="top-menu">
+        <a href="index.html" class="nav-link active">Dashboard</a>
+        <a href="strategies.html" class="nav-link">Strategies</a>
+        <a href="trades.html" class="nav-link">Trades &amp; Journal</a>
+        <a href="analytics.html" class="nav-link">Analytics</a>
+        <a href="settings.html" class="nav-link">Settings</a>
+      </div>
+      <div class="top-right-nav">
+        <a href="https://kite.zerodha.com/" target="_blank" class="kite-link">
+          Open in Zerodha
+        </a>
+      </div>
+    </div>
+
+    <!-- Trading status strip (no extra app name) -->
+    <div class="top-bar">
+      <span class="symbol">NIFTY</span>
+      <span id="nifty-top-price" class="price">-</span>
+      <span id="nifty-top-change" class="change">-</span>
+      <span id="nifty-top-signal" class="signal-badge flat">FLAT</span>
+    </div>
+
+    <!-- Main content row -->
     <div class="row">
-      <div class="card">
-        <h2>NIFTY Signal</h2>
-        <p>Price: <span id="nifty-price">-</span></p>
-        <p>Signal: <span id="nifty-signal" class="signal">-</span></p>
-        <p><span id="nifty-confidence">-</span></p>
-        <button class="buy-btn" onclick="placeOrder('NIFTY','BUY')">Buy</button>
-        <button class="sell-btn" onclick="placeOrder('NIFTY','SELL')">Sell</button>
+      <div class="card wide">
+        <h2>Strategy Overview</h2>
+        <div class="overview-list">
+          <div class="overview-row">
+            <span class="overview-label">Last signal</span>
+            <span id="overview-signal" class="overview-value">-</span>
+          </div>
+          <div class="overview-row">
+            <span class="overview-label">Position</span>
+            <span id="overview-position" class="overview-value">Flat</span>
+          </div>
+          <div class="overview-row">
+            <span class="overview-label">Today P&amp;L</span>
+            <span id="overview-today-pnl" class="overview-value">0.00</span>
+          </div>
+          <div class="overview-row">
+            <span class="overview-label">Total P&amp;L</span>
+            <span id="overview-total-pnl" class="overview-value">0.00</span>
+          </div>
+        </div>
       </div>
 
       <div class="card">
-        <h2>BANKNIFTY Signal</h2>
-        <p>Price: <span id="banknifty-price">-</span></p>
-        <p>Signal: <span id="banknifty-signal" class="signal">-</span></p>
-        <p><span id="banknifty-confidence">-</span></p>
-        <button class="buy-btn" onclick="placeOrder('BANKNIFTY','BUY')">Buy</button>
-        <button class="sell-btn" onclick="placeOrder('BANKNIFTY','SELL')">Sell</button>
+        <h2>Actions</h2>
+        <div class="actions-body">
+          <div class="actions-row">
+            <strong>Symbol NIFTY</strong>
+          </div>
+          <div class="actions-row">
+            current price:
+            <span id="nifty-price">-</span>
+          </div>
+          <div class="actions-row">
+            signal and confidence:
+            <span id="nifty-signal" class="signal">-</span>
+            &nbsp; <span id="nifty-confidence">-</span>
+          </div>
+          <div class="actions-row" style="padding-top:16px; border-bottom:none;">
+            <button class="buy-btn" onclick="placeOrder('NIFTY','BUY')">BUY</button>
+            <button class="sell-btn" onclick="placeOrder('NIFTY','SELL')">SELL</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="card">
-      <h3>Performance</h3>
-      <p>Realized P&L: <span id="pnl" class="">0</span></p>
-      <p>Closed trades: <span id="closed">0</span></p>
+    <!-- Bottom area -->
+    <div class="row" style="padding-top:0;">
+      <div class="card wide">
+        <h3>Recent Trades</h3>
+        <pre id="orders">[]</pre>
+      </div>
+      <div class="card">
+        <h3>Today Performance</h3>
+        <p>Realized P&amp;L: <span id="pnl" class="">0</span></p>
+        <p>Closed trades: <span id="closed">0</span></p>
+        <p>Zerodha cash margin: <span id="margin">-</span></p>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Orders</h3>
-      <pre id="orders">[]</pre>
-    </div>
-
-    <div class="card">
-      <h3>Positions</h3>
-      <pre id="positions">{}</pre>
+    <div class="row" style="padding-top:0;">
+      <div class="card wide">
+        <h3>Raw Positions</h3>
+        <pre id="positions">{}</pre>
+      </div>
     </div>
 
     <script>
@@ -63,23 +233,33 @@
           document.getElementById('nifty-signal').textContent = nd.prediction ?? '-';
           document.getElementById('nifty-signal').className = 'signal ' + (nd.prediction || '').toLowerCase();
           document.getElementById('nifty-confidence').textContent =
-            nd.model ? `Model: ${nd.model} | Conf: ${(nd.confidence * 100).toFixed(0)}%` : '-';
-        } catch (e) { console.log('nifty error', e); }
+            nd.model ? `Conf: ${(nd.confidence * 100).toFixed(0)}%` : '-';
 
-        try {
-          const b = await fetch('http://localhost:8000/banknifty');
-          const bd = await b.json();
-          document.getElementById('banknifty-price').textContent = bd.price ?? '-';
-          document.getElementById('banknifty-signal').textContent = bd.prediction ?? '-';
-          document.getElementById('banknifty-signal').className = 'signal ' + (bd.prediction || '').toLowerCase();
-          document.getElementById('banknifty-confidence').textContent =
-            bd.model ? `Model: ${bd.model} | Conf: ${(bd.confidence * 100).toFixed(0)}%` : '-';
-        } catch (e) { console.log('banknifty error', e); }
+          document.getElementById('nifty-top-price').textContent = nd.price ?? '-';
+          const changeEl = document.getElementById('nifty-top-change');
+          if (typeof nd.change_pct === 'number') {
+            changeEl.textContent = nd.change_pct.toFixed(2) + '%';
+            changeEl.className = 'change ' + (nd.change_pct >= 0 ? 'positive' : 'negative');
+          } else {
+            changeEl.textContent = '-';
+            changeEl.className = 'change';
+          }
+
+          const topSignal = document.getElementById('nifty-top-signal');
+          const sig = (nd.prediction || 'FLAT').toUpperCase();
+          topSignal.textContent = sig;
+          topSignal.className = 'signal-badge ' +
+            (sig === 'BUY' ? 'buy' : sig === 'SELL' ? 'sell' : 'flat');
+
+          document.getElementById('overview-signal').textContent = sig;
+        } catch (e) { console.log('nifty error', e); }
 
         try {
           const o = await fetch('http://localhost:5002/orders');
           const orders = await o.json();
           document.getElementById('orders').textContent = JSON.stringify(orders, null, 2);
+          const posText = orders.length ? 'Open / Active' : 'Flat';
+          document.getElementById('overview-position').textContent = posText;
         } catch (e) { console.log('orders error', e); }
 
         try {
@@ -89,13 +269,23 @@
         } catch (e) { console.log('positions error', e); }
 
         try {
-          const s = await fetch('http://localhost:5002/stats');
+          const s = await fetch('http://localhost:8000/journal-stats');
           const stats = await s.json();
           const pnlEl = document.getElementById('pnl');
           pnlEl.textContent = stats.realized_pnl.toFixed(2);
           pnlEl.className = stats.realized_pnl >= 0 ? 'pnl-positive' : 'pnl-negative';
           document.getElementById('closed').textContent = stats.closed_trades;
+          document.getElementById('overview-today-pnl').textContent = stats.realized_pnl.toFixed(2);
+          document.getElementById('overview-total-pnl').textContent = stats.realized_pnl.toFixed(2);
         } catch (e) { console.log('stats error', e); }
+
+        try {
+          const m = await fetch('http://localhost:8000/broker/margins');
+          const margins = await m.json();
+          const cash = margins?.equity?.available?.cash ?? null;
+          document.getElementById('margin').textContent =
+            cash !== null ? cash.toFixed(2) : '-';
+        } catch (e) { console.log('margins error', e); }
       }
 
       async function placeOrder(symbol, side) {

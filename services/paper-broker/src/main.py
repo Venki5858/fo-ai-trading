@@ -113,3 +113,4 @@ def stats():
         "closed_trades": closed_trades,
         "open_positions": open_positions,
     }
+
