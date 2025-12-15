@@ -68,9 +68,9 @@ services:
     ports:
       - "5005:5000"
     environment:
-      - Z_KITE_API_KEY=mtb3ovyzkoxwuovq
-      - Z_KITE_API_SECRET=uf698sbvsadg1znnukqdr5z47mkpcaaq
-      - Z_KITE_ACCESS_TOKEN=tVXABUHlNQT0D8YIzlQTC3Xu3wQQfQ9L
+      - Z_KITE_API_KEY=
+      - Z_KITE_API_SECRET=
+      - Z_KITE_ACCESS_TOKEN=
 
 volumes:
   postgres_data:
